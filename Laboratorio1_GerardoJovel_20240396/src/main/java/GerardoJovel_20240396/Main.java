@@ -42,7 +42,7 @@ public class Main {
 
             } else if ("2".equals(respuesta)) {
 
-                System.out.println("Imprimiendo estudiantes");
+                System.out.println("Imprimiendo estudiantes:");
                 for (Estudiante estudiante : estudiantes.values()) {
                     System.out.println("-- Estudiante con ID: " + estudiante.getId() + ", Nombre: " + estudiante.getNombre() + ", Edad: " + estudiante.getEdad() + ", y Promedio: " + estudiante.getPromedio());
                 }
@@ -53,17 +53,26 @@ public class Main {
                 Estudiante estudiante = estudiantes.get(estudianteId);
 
                 String nombre = obtenerNuevoNombre();
-                if ("".equals(nombre)) { continue; }
+                if ("".equals(nombre)) {
+                    System.out.println("- No se actualizará el nombre al no ser un valor válido");
+                } else {
+                    estudiante.setNombre(nombre);
+                }
 
                 int edad = obtenerNuevaEdad();
-                if (edad < 0) { continue; }
+                if (edad < 0) {
+                    System.out.println("- No se actualizará la edad al no ser un valor válido");
+                } else {
+                    estudiante.setEdad(edad);
+                }
 
                 double promedio = obtenerNuevoPromedio();
-                if (promedio < 0) { continue;}
+                if (promedio < 0) {
+                    System.out.println("- No se actualizará el promedio al no ser un valor válido");
+                } else {
+                    estudiante.setPromedio(promedio);
+                }
 
-                estudiante.setNombre(nombre);
-                estudiante.setEdad(edad);
-                estudiante.setPromedio(promedio);
 
             } else if ("4".equals(respuesta)) {
                 String estudianteId = obtenerExistenteId();
@@ -84,6 +93,7 @@ public class Main {
             }
 
         }
+        System.out.println("Adios!!");
 
     }
 
@@ -92,7 +102,7 @@ public class Main {
         String estudianteId = scan.nextLine();
 
         if (!estudiantes.containsKey(estudianteId)) {
-            System.out.println("El id (y por lo tanto el estudiante) no existe");
+            System.out.println("- El id (y por lo tanto el estudiante) no existe");
             return "";
         }
         return estudianteId;
@@ -103,9 +113,15 @@ public class Main {
         String estudianteId = scan.nextLine();
 
         if (estudiantes.containsKey(estudianteId)) {
-            System.out.println("El id ya existe");
+            System.out.println("- El id ya existe");
             return "";
         }
+
+        if ("".equals(estudianteId)) {
+            System.out.println("- El nuevo id no puede estar vacío");
+            return "";
+        }
+
         return estudianteId;
     }
 
@@ -115,7 +131,7 @@ public class Main {
         String nuevoNombre = scan.nextLine();
 
         if ("".equals(nuevoNombre)) {
-            System.out.println("El nuevo nombre no puede estar vacío");
+            System.out.println("- El nuevo nombre no puede estar vacío");
             return "";
         }
         return nuevoNombre;
@@ -126,12 +142,12 @@ public class Main {
         try {
             int nuevaEdad = Integer.parseInt(scan.nextLine());
             if (nuevaEdad < 0) {
-                System.out.println("La edad no puede ser negativa");
+                System.out.println("- La edad no puede ser negativa");
                 return -1;
             }
             return nuevaEdad;
         } catch (Exception e) {
-            System.out.println("No ingreso un número entero");
+            System.out.println("- No ingreso un número entero");
             return  -1;
         }
 
@@ -143,17 +159,17 @@ public class Main {
        try {
            double nuevoPromedio = Double.parseDouble(scan.nextLine());
            if (nuevoPromedio < 0) {
-               System.out.println("El promedio no puede ser negativo");
+               System.out.println("- El promedio no puede ser negativo");
                return -1;
            }
            if (nuevoPromedio > 10) {
-               System.out.println("El nuevo promedio no puede ser mayor a diez");
+               System.out.println("- El nuevo promedio no puede ser mayor a diez");
                return -1;
            }
 
            return nuevoPromedio;
        } catch (Exception e) {
-           System.out.println("No ingreso un número flotante");
+           System.out.println("- No ingreso un número flotante");
            return -1;
        }
     }
