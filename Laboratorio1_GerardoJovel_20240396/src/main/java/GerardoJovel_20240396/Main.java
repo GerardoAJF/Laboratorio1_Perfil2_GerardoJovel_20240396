@@ -5,11 +5,10 @@ import java.util.Scanner;
 import java.util.TreeMap;
 
 public class Main {
-
+    static TreeMap<String, Estudiante> estudiantes = new TreeMap<>();
+    static Scanner scan = new Scanner(System.in);
 
     public static void main(String[] args) {
-        TreeMap<String, Estudiante> estudiantes = new TreeMap<>();
-        Scanner scan = new Scanner(System.in);
 
         String respuesta;
 
@@ -27,84 +26,59 @@ public class Main {
 
             if ("1".equals(respuesta)) {
 
-                System.out.println("Ingrese el id del estudiante");
-                String nuevoId = scan.nextLine();
+                String estudianteId = obtenerNuevoId();
+                if ("".equals(estudianteId)) { continue; }
 
-                if (estudiantes.containsKey(nuevoId)) {
-                    System.out.println("El nuevo id ya existe");
-                    continue;
-                }
+                String nombre = obtenerNuevoNombre();
+                if ("".equals(nombre)) { continue; }
 
-                System.out.println("Ingrese el nombre del estudiante");
-                String nuevoNombre = scan.nextLine();
-                System.out.println("Ingrese la edad del estudiante");
-                int nuevaEdad = Integer.parseInt(scan.nextLine());
-                System.out.println("Ingrese el promedio del estudiante");
-                double nuevoPromedio = Double.parseDouble(scan.nextLine());
+                int edad = obtenerNuevaEdad();
+                if (edad < 0) { continue; }
 
-                if (nuevoPromedio < 0) {
-                    System.out.println("El promedio no puede ser negativo");
-                    continue;
-                }
+                double promedio = obtenerNuevoPromedio();
+                if (promedio < 0) { continue;}
 
-                estudiantes.put(nuevoId, new Estudiante(nuevoId, nuevoNombre, nuevaEdad, nuevoPromedio));
+                estudiantes.put(estudianteId, new Estudiante(estudianteId, nombre, edad, promedio));
 
             } else if ("2".equals(respuesta)) {
 
+                System.out.println("Imprimiendo estudiantes");
                 for (Estudiante estudiante : estudiantes.values()) {
-                    System.out.println("-- El estudiante con ID: " + estudiante.getId() + ", Nombre: " + estudiante.getNombre() + ", Edad: " + estudiante.getEdad() + ", y Promedio: " + estudiante.getPromedio());
+                    System.out.println("-- Estudiante con ID: " + estudiante.getId() + ", Nombre: " + estudiante.getNombre() + ", Edad: " + estudiante.getEdad() + ", y Promedio: " + estudiante.getPromedio());
                 }
 
             } else if ("3".equals(respuesta)) {
-
-                System.out.println("Ingrese el id del estudiante");
-                String estudianteId = scan.nextLine();
-
-                if (!estudiantes.containsKey(estudianteId)) {
-                    System.out.println("El id (y por lo tanto el estudiante) no existe");
-                    continue;
-                }
-
+                String estudianteId = obtenerExistenteId();
+                if ("".equals(estudianteId)) { continue; }
                 Estudiante estudiante = estudiantes.get(estudianteId);
 
-                System.out.println("Ingrese el nuevo nombre del estudiante");
-                estudiante.setNombre(scan.nextLine());
-                System.out.println("Ingrese la nueva edad del estudiante");
-                estudiante.setEdad(Integer.parseInt(scan.nextLine()));
-                System.out.println("Ingrese el nuevo promedio del estudiante");
+                String nombre = obtenerNuevoNombre();
+                if ("".equals(nombre)) { continue; }
 
-                double nuevoPromedio = Double.parseDouble(scan.nextLine());
-                if (nuevoPromedio < 0) {
-                    System.out.println("El promedio no puede ser negativo, así que se mantendrá el antiguo");
-                    continue;
-                }
-                estudiante.setPromedio(nuevoPromedio);
+                int edad = obtenerNuevaEdad();
+                if (edad < 0) { continue; }
+
+                double promedio = obtenerNuevoPromedio();
+                if (promedio < 0) { continue;}
+
+                estudiante.setNombre(nombre);
+                estudiante.setEdad(edad);
+                estudiante.setPromedio(promedio);
 
             } else if ("4".equals(respuesta)) {
-
-                System.out.println("Ingrese el id del estudiante");
-                String estudianteId = scan.nextLine();
-
-                if (!estudiantes.containsKey(estudianteId)) {
-                    System.out.println("El id (y por lo tanto el estudiante) no existe");
-                    continue;
-                }
+                String estudianteId = obtenerExistenteId();
+                if ("".equals(estudianteId)) { continue;}
 
                 estudiantes.remove(estudianteId);
                 System.out.println("El estudiante con ID: " + estudianteId + " ha sido neutralizado");
 
             } else if ("5".equals(respuesta)) {
-                System.out.println("Ingrese el id del estudiante");
-                String estudianteId = scan.nextLine();
-
-                if (!estudiantes.containsKey(estudianteId)) {
-                    System.out.println("El id (y por lo tanto el estudiante) no existe");
-                    continue;
-                }
+                String estudianteId = obtenerExistenteId();
+                if ("".equals(estudianteId)) { continue;}
 
                 Estudiante estudiante = estudiantes.get(estudianteId);
                 System.out.println("ID: " + estudiante.getId() + ", Nombre: " + estudiante.getNombre() + ", Edad: " + estudiante.getEdad() + ", y Promedio: " + estudiante.getPromedio());
-                
+
             } else {
                 exit = true;
             }
@@ -112,5 +86,77 @@ public class Main {
         }
 
     }
+
+    public static String obtenerExistenteId() {
+        System.out.println("Ingrese el id del estudiante");
+        String estudianteId = scan.nextLine();
+
+        if (!estudiantes.containsKey(estudianteId)) {
+            System.out.println("El id (y por lo tanto el estudiante) no existe");
+            return "";
+        }
+        return estudianteId;
+    }
+
+    public static String obtenerNuevoId() {
+        System.out.println("Ingrese el id del estudiante");
+        String estudianteId = scan.nextLine();
+
+        if (estudiantes.containsKey(estudianteId)) {
+            System.out.println("El id ya existe");
+            return "";
+        }
+        return estudianteId;
+    }
+
+    public static String obtenerNuevoNombre() {
+        System.out.println("Ingrese el nuevo nombre del estudiante");
+
+        String nuevoNombre = scan.nextLine();
+
+        if ("".equals(nuevoNombre)) {
+            System.out.println("El nuevo nombre no puede estar vacío");
+            return "";
+        }
+        return nuevoNombre;
+    }
+
+    public static int obtenerNuevaEdad() {
+        System.out.println("Ingrese la nueva edad del estudiante");
+        try {
+            int nuevaEdad = Integer.parseInt(scan.nextLine());
+            if (nuevaEdad < 0) {
+                System.out.println("La edad no puede ser negativa");
+                return -1;
+            }
+            return nuevaEdad;
+        } catch (Exception e) {
+            System.out.println("No ingreso un número entero");
+            return  -1;
+        }
+
+    }
+
+    public static double obtenerNuevoPromedio() {
+        System.out.println("Ingrese el nuevo promedio del estudiante");
+
+       try {
+           double nuevoPromedio = Double.parseDouble(scan.nextLine());
+           if (nuevoPromedio < 0) {
+               System.out.println("El promedio no puede ser negativo");
+               return -1;
+           }
+           if (nuevoPromedio > 10) {
+               System.out.println("El nuevo promedio no puede ser mayor a diez");
+               return -1;
+           }
+
+           return nuevoPromedio;
+       } catch (Exception e) {
+           System.out.println("No ingreso un número flotante");
+           return -1;
+       }
+    }
+
 
 }

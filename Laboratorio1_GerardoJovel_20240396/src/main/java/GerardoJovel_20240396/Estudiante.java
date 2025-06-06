@@ -1,7 +1,7 @@
 package GerardoJovel_20240396;
 
 public class Estudiante {
-    private String id;
+    private final String id;
     private String nombre;
     private int edad;
     private double promedio;
@@ -16,9 +16,6 @@ public class Estudiante {
 
     public String getId() {
         return id;
-    }
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getNombre() {
